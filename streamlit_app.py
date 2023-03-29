@@ -64,6 +64,7 @@ def get_dataframe():
             "ภาษี",
             "วันที่อัพเดท",
             "สถานะ",
+            "Blanks1",
         ],
     )
     return df
