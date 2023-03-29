@@ -37,14 +37,14 @@ def get_dataframe():
     rows = conn.execute(
         f"""SELECT 
                     "รหัส" AS STRING,
-                    "ชื่อสินค้า" AS STRING,
+                    "ชื่อสินค้า(Item_Description_JKSUPPLYANDMACHINERY)" AS STRING,
                     "บรรจุ" AS STRING,
                     "ราคาตั้ง" AS STRING,
                     "ส่วนลด" AS STRING,
                     "ภาษี" AS STRING,
                     "หมายเหตุ/อื่นๆ" AS STRING,
                     "วันที่อัพเดทราคา" AS STRING,
-                    "สถานะ" AS STRING,
+                    "สถานะ(วันที่อัพเดท-Status)" AS STRING,
                     "Blanks1" AS STRING,
                     "Blanks2" AS STRING
                     
@@ -58,14 +58,14 @@ def get_dataframe():
         rows,
         columns=[
             "รหัส",
-            "ชื่อสินค้า",
+            "ชื่อสินค้า(Item_Description_JKSUPPLYANDMACHINERY)",
             "บรรจุ",
             "ราคาตั้ง",
             "ส่วนลด",
             "ภาษี",
             "หมายเหตุ/อื่นๆ",
             "วันที่อัพเดทราคา",
-            "สถานะ",
+            "สถานะ(วันที่อัพเดท-Status)",
             "Blanks1",
             "Blanks2",
         ],
@@ -95,7 +95,7 @@ def filter_dataframe():
 
         df = get_dataframe()
 
-    return df[df["ชื่อสินค้า"].str.contains(user_text_input, regex=False)]
+    return df[df["ชื่อสินค้า(Item_Description_JKSUPPLYANDMACHINERY)"].str.contains(user_text_input, regex=False)]
 
 name, authentication_status, username = authenticator.login('Login', 'main')
 
