@@ -44,7 +44,8 @@ def get_dataframe():
                     "ส่วนลด" AS STRING,
                     "ภาษี" AS STRING,
                     "วันที่อัพเดท" AS STRING,
-                    "สถานะ" AS STRING
+                    "สถานะ" AS STRING,
+                    "Blanks1" AS STRING
                 FROM "{st.secrets["private_gsheets_url"]}"
                 """,
         headers=1,
