@@ -38,14 +38,16 @@ def get_dataframe():
         f"""SELECT 
                     "รหัส" AS STRING,
                     "ชื่อสินค้า" AS STRING,
-                    "หมายเหตุ/อื่นๆ" AS STRING,
                     "บรรจุ" AS STRING,
                     "ราคาตั้ง" AS STRING,
                     "ส่วนลด" AS STRING,
                     "ภาษี" AS STRING,
-                    "วันที่อัพเดท" AS STRING,
+                    "หมายเหตุ/อื่นๆ" AS STRING,
+                    "วันที่อัพเดทราคา" AS STRING,
                     "สถานะ" AS STRING,
-                    "Blanks1" AS STRING
+                    "Blanks1" AS STRING,
+                    "Blanks2" AS STRING
+                    
                 FROM "{st.secrets["private_gsheets_url"]}"
                 """,
         headers=1,
@@ -57,14 +59,15 @@ def get_dataframe():
         columns=[
             "รหัส",
             "ชื่อสินค้า",
-            "หมายเหตุ/อื่นๆ",
             "บรรจุ",
             "ราคาตั้ง",
             "ส่วนลด",
             "ภาษี",
-            "วันที่อัพเดท",
+            "หมายเหตุ/อื่นๆ",
+            "วันที่อัพเดทราคา",
             "สถานะ",
             "Blanks1",
+            "Blanks2",
         ],
     )
     return df
