@@ -95,6 +95,7 @@ def filter_dataframe():
 
         df = get_dataframe()
 
+    df = df[~df["ชื่อสินค้า(Item_Description_JKSUPPLYANDMACHINERY)"].isna()]
     return df[df["ชื่อสินค้า(Item_Description_JKSUPPLYANDMACHINERY)"].str.contains(user_text_input, regex=False)]
 
 name, authentication_status, username = authenticator.login('Login', 'main')
