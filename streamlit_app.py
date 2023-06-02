@@ -38,7 +38,7 @@ def get_dataframe():
         f"""SELECT 
                     "รหัส" AS STRING,
                     "ชื่อสินค้า(Item_Description_JKSUPPLYANDMACHINERY)" AS STRING,
-                    "บรรจุ" AS STRING,
+                    "บรรจุ(Packaging)" AS STRING,
                     "หน่วย" AS STRING,
                     "ราคาตั้ง" AS STRING,
                     "ส่วนลด" AS STRING,
@@ -60,7 +60,7 @@ def get_dataframe():
         columns=[
             "รหัส",
             "ชื่อสินค้า(Item_Description_JKSUPPLYANDMACHINERY)",
-            "บรรจุ",
+            "บรรจุ(Packaging)",
             "หน่วย",
             "ราคาตั้ง",
             "ส่วนลด",
@@ -90,7 +90,7 @@ def filter_dataframe():
     with modification_container:
         column = ""
         left, right = st.columns((1, 20))
-
+        
         user_text_input = right.text_input(
             f"Substring or regex in {column}",
         )
