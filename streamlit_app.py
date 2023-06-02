@@ -36,7 +36,7 @@ conn = connect(credentials=credentials)
 def get_dataframe():
     rows = conn.execute(
         f"""SELECT 
-                    "รหั" AS STRING,
+                    "รหัส" AS STRING,
                     "ชื่อสินค้า(Item_Description_JKSUPPLYANDMACHINERY)" AS STRING,
                     "บรรจุ" AS STRING,
                     "หน่วย" AS STRING,
@@ -58,7 +58,7 @@ def get_dataframe():
     df = pd.DataFrame(
         rows,
         columns=[
-            "รหัส",
+            "รหั",
             "ชื่อสินค้า(Item_Description_JKSUPPLYANDMACHINERY)",
             "บรรจุ",
             "หน่วย",
