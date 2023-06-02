@@ -58,7 +58,7 @@ def get_dataframe():
     df = pd.DataFrame(
         rows,
         columns=[
-            "รหั",
+            "รหัส",
             "ชื่อสินค้า(Item_Description_JKSUPPLYANDMACHINERY)",
             "บรรจุ",
             "หน่วย",
@@ -102,12 +102,4 @@ def filter_dataframe():
 
 name, authentication_status, username = authenticator.login('Login', 'main')
 
-if authentication_status:
-    authenticator.logout('Logout', 'main')
-    st.write(f'Welcome *{name}*')
-    st.dataframe(filter_dataframe(), use_container_width=True)
-elif authentication_status is False:
-    st.error('Username/password is incorrect')
-elif authentication_status is None:
-    st.warning('Please enter your username and password')
 
