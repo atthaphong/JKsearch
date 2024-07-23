@@ -1,17 +1,10 @@
-# streamlit_app.py
 import streamlit as st
 import streamlit_authenticator as stauth
 import pandas as pd
-from google.oauth2 import service_account
-from gsheetsdb import connect
+import gspread
+from streamlit_authenticator.utilities.hasher import Hasher
 
-# Create a connection object.
-credentials = service_account.Credentials.from_service_account_info(
-    st.secrets["gcp_service_account"],
-    scopes=[
-        "https://www.googleapis.com/auth/spreadsheets",
-    ],
-)
+
 
 # Authentication
 authenticator = stauth.Authenticate(
@@ -20,7 +13,7 @@ authenticator = stauth.Authenticate(
             st.secrets["login_user"]: {
                 "email": "test@test.com",
                 "name": st.secrets["login_display_name"],
-                "password": stauth.Hasher([st.secrets["login_password"]]).generate()[0],
+                "password": Hasher([st.secrets["login_password"]]).generate()[0],
             }
         }
     },
@@ -28,65 +21,43 @@ authenticator = stauth.Authenticate(
     "jk_lookup",
     30,
 )
-
-conn = connect(credentials=credentials)
-
-
+ 
+ 
+ 
 @st.cache_data(ttl=600)
 def get_dataframe():
-    rows = conn.execute(
-        f"""SELECT 
-                    "รหัส" AS STRING,
-                    "ชื่อสินค้า(Item_Description_JKSUPPLYANDMACHINERY)" AS STRING,
-                    "บรรจุ(Packaging)" AS STRING,
-                    "หน่วย" AS STRING,
-                    "ราคาตั้ง" AS STRING,
-                    "ส่วนลด" AS STRING,
-                    "ภาษี" AS STRING,
-                    "หมายเหตุ/อื่นๆ" AS STRING,
-                    "วันที่อัพเดทราคา" AS STRING,
-                    "สถานะ(วันที่อัพเดท-Status)" AS STRING,
-                    "Blanks1" AS STRING,
-                    "Blanks2" AS STRING
-                    
-                FROM "{st.secrets["private_gsheets_url"]}"
-                """,
-        headers=1,
-    )
-    rows = rows.fetchall()
-
-    df = pd.DataFrame(
-        rows,
-        columns=[
-            "รหัส",
-            "ชื่อสินค้า(Item_Description_JKSUPPLYANDMACHINERY)",
-            "บรรจุ(Packaging)",
-            "หน่วย",
-            "ราคาตั้ง",
-            "ส่วนลด",
-            "ภาษี",
-            "หมายเหตุ/อื่นๆ",
-            "วันที่อัพเดทราคา",
-            "สถานะ(วันที่อัพเดท-Status)",
-            "Blanks1",
-            "Blanks2",
-        ],
-    )
+    gc = gspread.service_account(filename='jksearch-6cb382d7aa47.json')
+    sh = gc.open_by_key('1Dc_PuqpfiikinpPBlnsP1HLStQAIxy5A-_2QhvHbRWA')
+    worksheet = sh.sheet1
+    df = pd.DataFrame(worksheet.get_all_records(expected_headers=[
+    "รหัส",
+    "ชื่อสินค้า(Item_Description_JKSUPPLYANDMACHINERY)",
+    "บรรจุ(Packaging)",
+    "หน่วย",
+    "ราคาตั้ง",
+    "ส่วนลด",
+    "ภาษี",
+    "หมายเหตุ/อื่นๆ",
+    "วันที่อัพเดทราคา",
+    "สถานะ(วันที่อัพเดท-Status)",
+    "Blanks1",
+    "Blanks2",
+    ]))
     return df
-
-
+ 
+ 
 def filter_dataframe():
     """
     Adds a UI on top of a dataframe to let viewers filter columns
-
+ 
     Args:
         df (pd.DataFrame): Original dataframe
-
+ 
     Returns:
         pd.DataFrame: Filtered dataframe
     """
     modification_container = st.container()
-
+ 
     with modification_container:
         column = ""
         left, right = st.columns((1, 20))
@@ -94,14 +65,15 @@ def filter_dataframe():
         user_text_input = right.text_input(
             f"Substring or regex in {column}",
         )
-
+ 
         df = get_dataframe()
-
+ 
     df = df[~df["ชื่อสินค้า(Item_Description_JKSUPPLYANDMACHINERY)"].isna()]
     return df[df["ชื่อสินค้า(Item_Description_JKSUPPLYANDMACHINERY)"].str.contains(user_text_input, regex=False)]
+ 
+name, authentication_status, username = authenticator.login()
 
-name, authentication_status, username = authenticator.login('Login', 'main')
-
+ 
 if authentication_status:
     authenticator.logout('Logout', 'main')
     st.write(f'Welcome *{name}*')
